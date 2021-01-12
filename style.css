@@ -1,0 +1,175 @@
+html {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    background: #C33764;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #1D2671, #C33764);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #1D2671, #C33764);
+    padding: 5px
+}
+
+:root {
+    --ls-theme-color: #43dbbd;
+    --ls-theme-color-darker: #3B896D;
+    --grey-color: #c0c0c0;
+}
+
+.contentContainer {
+    max-width: 1000px;
+    margin-top: 20px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.contentContainer p,
+.contentContainer h1,
+.contentContainer h2 {
+    width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    margin-bottom: 30px;
+}
+
+.contentContainer h1 {
+    border-style: solid;
+    border-width: 4px;
+    border-radius: 8px;
+    padding: 5px;
+    text-align: center;
+}
+
+.constrainWidth {
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+.imageContainer {
+    border-color: var(--grey-color);
+    border-width: 4px;
+    border-style: solid;
+    width: 90%;
+    max-width: 500px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.imageContainer img {
+    width: 100%;
+    height: auto;
+}
+
+.lsTable {
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 900px;
+    width: 90%;
+    margin-bottom: 20px;
+}
+
+.lsTable tr td,
+.lsTable tr th {
+    border-color: black;
+    border-style: solid;
+    border-width: 1px;
+    border-collapse: collapse;
+    padding: 5px;
+}
+
+.forceCenter {
+    text-align: center;
+}
+
+.formTitle {
+    font-weight: bold;
+    font-size: x-large;
+    color: white;
+    border-style: solid;
+    border-width: 4px;
+    border-radius: 4px;
+    width: 90%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+form {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+    border-style: solid;
+    border-width: 4px;
+    border-radius: 8px;
+}
+
+.formField {
+    width: fit-content;
+    display: flex;
+    text-align: center;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 10px;
+}
+
+button {
+    color: white;
+    font-size: large;
+    background-color: var(--grey-color);
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.widthEnforcer {
+    width: 180px;
+}
+
+.rateOfWeightGain {
+    font-style: italic;
+    font-size: x-large;
+}
+
+button:hover {
+    cursor: pointer;
+    border-color: var(--ls-theme-color);
+}
+
+.lsBorderColor {
+    border-color: var(--ls-theme-color);
+}
+
+.lsBackgroundColor {
+    background-color: var(--ls-theme-color);
+    color: white;
+}
+
+.lsThemeText {
+    color: var(--ls-theme-color);
+    font-weight: bold;
+}
+
+.greyBorder {
+    border-color: var(--grey-color);
+}
+
+.greyBackground {
+    background-color: var(--grey-color);
+}
+
+.rateOfWeightGain {
+    width: 90%;
+    text-align: center;
+    margin-bottom: 10px;
+}
