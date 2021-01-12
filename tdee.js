@@ -37,12 +37,14 @@ class User{
      *                                  represents what type of athlete the user is.
      * @param fatFreeMass    the user's FFM/LBM. Null if the measurement is unkown. 
      */
-    constructor(heightInches, weightPounds, isMale, activityLevel, ageYears ){
+    constructor(heightInches, weightPounds, isMale, activityLevel, ageYears, athleteType, fatFreeMass ){
         this.heightInches = heightInches;
         this.weightPounds = weightPounds;
         this.isMale = isMale;
         this.activityLevel = activityLevel;
         this.ageYears = ageYears;
+        this.athleteType = athleteType;
+        this.fatFreeMass = fatFreeMass;
     }
  
 }
@@ -84,58 +86,153 @@ const PREVENT_PAGE_RELOAD = false;
 /**
  * 
  */
-TINSLEY_TDEE_EQUATION = EnergyEquation("Tinsley", (user)=>{
-    const TDEE;
+const TINSLEY_TDEE_EQUATION = new EnergyEquation("Tinsley", (user)=>{
+    const TDEE = 0;
     return TDEE;
 });
 
 /**
  * 
  */
-TEN_HAAF_TDEE_EQUATION = EnergyEquation("ten Haaf", (user)=>{
-    const TDEE;
+const TEN_HAAF_TDEE_EQUATION = new EnergyEquation("ten Haaf", (user)=>{
+    const TDEE = 0;
     return TDEE;
 });
 
 /**
  * 
  */
-MIFFLIN_TDEE_EQUATION = EnergyEquation("Mifflin-St. Joer", (user)=>{
-    const TDEE;
+const MIFFLIN_TDEE_EQUATION = new EnergyEquation("Mifflin-St. Joer", (user)=>{
+    const TDEE = 0;
     return TDEE;
 });
 
 /**
  * 
  */
-CUNNINGHAM_TDEE_EQUATION = EnergyEquation("Cunnigham", (user)=>{
-    const TDEE;
+const CUNNINGHAM_TDEE_EQUATION = new EnergyEquation("Cunnigham", (user)=>{
+    const TDEE = 0;
     return TDEE;
 });
 
 /**
  * 
  */
-OWEN_TDEE_EQUATION = EnergyEquation("Owen", (user)=>{
-    const TDEE;
+const OWEN_TDEE_EQUATION = new EnergyEquation("Owen", (user)=>{
+    const TDEE = 0;
     return TDEE;
 });
 
 /**
  * 
  */
-MULLER_TDEE_EQUATION = EnergyEquation("Müller", (user)=>{
-    const TDEE;
+const MULLER_TDEE_EQUATION = new EnergyEquation("Müller", (user)=>{
+    const TDEE = 0;
     return TDEE;
 });
 
 /**
  * 
  */
-DE_LORENZO_TDEE_EQUATION = EnergyEquation("De Lorenzo", (user)=>{
-    const TDEE;
+const DE_LORENZO_TDEE_EQUATION = new EnergyEquation("De Lorenzo", (user)=>{
+    const TDEE = 0;
     return TDEE;
 });
+
+/**
+ * Constant used for athlete type when the user is a physique athlete.
+ */
+ATHLETE_TYPE_PHYSIQUE = "physique";
+
+/**
+ * Constant used for athlete type when the user is a sport athlete.
+ */
+ATHLETE_TYPE_SPORT = "sport";
+
+/**
+ * Constant used for FFM measurement technique type of skinfold
+ */
+FFM_TECHNIQUE_SKINFOLD = "skinfold";
+
+/**
+ * Constant used for FFM measurement technique type of DXA
+ */
+FFM_TECHNIQUE_DXA = "dxa";
+
+/**
+ * Constant used for FFM measurement technique type of UWW
+ */
+FFM_TECHNIQUE_UWW = "uww";
+
+/**
+ * Constant used for FFM measurement technique type of BIA
+ */
+FFM_TECHNIQUE_BIA = "bia";
+
+/**
+ * Given a user object, returns the optimal equation to estimate TDEE for that user.
+ */
+function getOptimalEquationForTDEE(user){
+    let optimalEq;
+    const userKnowsFFM = (user.fatFreeMass != null);
+    const userIsAthlete = (user.athleteType != null);
+    const isSportAthlete = (user.athleteType == ATHLETE_TYPE_SPORT);
+    const isPhysiqueAthlete = (user.athleteType == ATHLETE_TYPE_PHYSIQUE);
+    const userIsMale = (user.isMale == true);
+    const userIsFemale = (user.isMale == false);
+    if(userKnowsFFM){
+        if(userIsAthlete){
+            if(isPhysiqueAthlete){
+                optimalEq = TINSLEY_TDEE_EQUATION;
+            }
+            else if( isSportAthlete){
+                optimalEq = TEN_HAAF_TDEE_EQUATION;
+            }
+        }
+        else{
+            const determinedBySkinfold = (user.fatFreeMass.technique == FFM_TECHNIQUE_SKINFOLD);
+            const determinedByDXA = (user.fatFreeMass.technique == FFM_TECHNIQUE_DXA);
+            const determinedByUWW = (user.fatFreeMass.technique == FFM_TECHNIQUE_UWW);
+            const determinedByBIA = (user.fatFreeMass.technique == FFM_TECHNIQUE_BIA);
+            if(determinedBySkinfold){
+                optimalEq = MIFFLIN_TDEE_EQUATION;
+            }
+            else if(determinedByDXA){
+                optimalEq = CUNNINGHAM_TDEE_EQUATION;
+            }
+            else if(determinedByUWW){
+                optimalEq = OWEN_TDEE_EQUATION;
+            }
+            else if( determinedByBIA){
+                optimalEq = MULLER_TDEE_EQUATION;
+            }
+        }
+    }
+    else{
+        if(userIsAthlete){
+            if(isPhysiqueAthlete){
+                optimalEq = TINSLEY_TDEE_EQUATION;
+            }
+            else if( isSportAthlete){
+                if(userIsMale){
+                    optimalEq = DE_LORENZO_TDEE_EQUATION;
+                }
+                else if(userIsFemale){
+                    optimalEq = TEN_HAAF_TDEE_EQUATION;
+                }
+            }
+        }
+        else{
+            if(userIsMale){
+                optimalEq = MIFFLIN_TDEE_EQUATION;
+            }
+            else if(userIsFemale){
+                optimalEq = OWEN_TDEE_EQUATION;
+            }
+        }
+    }
+    return optimalEq;
+}
 
 console.log("Hello World");
 
