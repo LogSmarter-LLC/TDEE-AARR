@@ -2,20 +2,46 @@
  * Class used to represent a FFM/LBM measurement. Contains the 
  * technique used to measure FFM/LBM and the actual measurement.
  */
-class FatFreeMassMeasurement{
+class BodyFatMeasurement{
  
     /**
      * Constructor assumes all parameters are valid and does no
      * checking for object types or errors.
      * 
-     * @param measurement the value of the user's FFM.
-     * @param technique   the technique used to measure FFM.
+     * @param measurement  the BF% of the user, represented as a decimal. For
+     *                          example, if the user's BF% is 17%, then the constructor
+     *                          is expecting measurement to be 0.17 .
+     * @param technique    the technique used to measure FFM.
+     * @param userWeightKG the weight of the user that this measurement is from in kg.
      */
-    constructor(measurement,technique){
+    constructor(measurement,technique,userWeightKG){
         this.measurement = measurement;
         this.technique = technique;
+        this.userWeightKG = userWeightKG;
     }
- 
+
+    /**
+     * Returns the user's FM in kg. This object knows the 
+     * user's total mass and body fat percentage. Given that
+     * information, we can calculate the user's 
+     */
+    getFM(){
+        const FAT_MASS_KG = (this.userWeightKG * this.measurement);
+        return FAT_MASS_KG;
+    }
+
+    /**
+     * Returns the user's FFM in kg. This object knows the 
+     * user's total mass and body fat percentage. Given that
+     * information, we can calculate the user's FM and then 
+     * subtract that from their total mass to calculate FFM.
+     */
+    getFFM(){
+        const FAT_MASS_KG = this.getFM();
+        const TOTAL_MASS_KG = this.userWeightKG;
+        const LEAN_MASS_KG = (TOTAL_MASS_KG - FAT_MASS_KG);
+        return LEAN_MASS_KG;
+    }
 }
 
 /**
@@ -28,29 +54,36 @@ class User{
      * Constructor assumes all parameters are valid and does no
      * checking for object types or errors.
      * 
-     * @param heightInches   the user's height in inches 
-     * @param weightPounds   the user's weight in pounds
+     * @param heightCM   the user's height in cm 
+     * @param weightKG   the user's weight in kg
      * @param isMale         true if the user is male, false if they are female
      * @param activityLevel  a constant used to represent the user's activity level
      * @param ageYears       the user's age in years
      * @param athleteType    null if the user is not an athlete. otherwise a string that 
      *                                  represents what type of athlete the user is.
-     * @param fatFreeMass    the user's FFM/LBM. Null if the measurement is unkown. 
+     * @param bodyFat    the user's FFM/LBM. Null if the measurement is unkown. 
      */
-    constructor(heightInches, weightPounds, isMale, activityLevel, ageYears, athleteType, fatFreeMass ){
-        this.heightInches = heightInches;
-        this.weightPounds = weightPounds;
+    constructor(heightCM, weightKG, isMale, activityLevel, ageYears, athleteType, bodyFat ){
+        this.heightCM = heightCM;
+        this.weightKG = weightKG;
         this.isMale = isMale;
         this.activityLevel = activityLevel;
         this.ageYears = ageYears;
         this.athleteType = athleteType;
-        this.fatFreeMass = fatFreeMass;
+        this.bodyFat = bodyFat;
     }
- 
+
+    /**
+     * Returns the activity level multiplier associated with a 
+     * users activity level.
+     */
+    getActivityMultiplier(){
+        //stub
+    }
 }
 
 /**
- * Class used to represent the different equations that are used to estimate TDEE.
+ * Class used to represent the different equations that are used to estimateRMR.
  */
 class EnergyEquation{
  
@@ -58,7 +91,7 @@ class EnergyEquation{
      * Constructor assumes all parameters are valid and does no
      * checking for object types or errors.
      * 
-     * @param name name of the TDEE estimation model/equation
+     * @param name name of the RMR estimation model/equation
      * @param estimate a function that accepts a user object and 
      *                      estimates their TDEE as a number
      */
@@ -69,10 +102,18 @@ class EnergyEquation{
  
     /**
      * Returns a string that contains the name of the equation and 
-     * the result of an estimation for a given user object.
+     * the result of an RMR estimation for a given user object.
      */
-    getEstimate(person){
+    getEstimateOfRMR(person){
         return (this.name + ": " + this.estimate(person));
+    }
+
+    /**
+     * Returns a string that contains the name of the equation and 
+     * the result of a TDEE estimation for a given user object.
+     */
+    getEstimateOfTDEE(person){
+        return (this.name + ": " + (this.estimate(person) * user.getActivityMultiplier()));
     }
 }
 
@@ -84,59 +125,156 @@ class EnergyEquation{
 const PREVENT_PAGE_RELOAD = false;
 
 /**
- * 
+ * Calculates RMR using equation from Tinsley et al. to predict RMR (given FFM).
+ *      RMR = 25.9 * FFM + 284
  */
-const TINSLEY_TDEE_EQUATION = new EnergyEquation("Tinsley", (user)=>{
-    const TDEE = 0;
-    return TDEE;
+const TINSLEY_RMR_EQUATION_FFM = new EnergyEquation("Tinsley", (user) => {
+    const RMR = ((25.9 * user.bodyFat.getFFM() ) + 284);
+    return RMR;
 });
 
 /**
- * 
+ * Calculates RMR using equation from Tinsley et al. to predict RMR (NOT given FFM).
+ *      RMR = 24.8 * BW + 10
  */
-const TEN_HAAF_TDEE_EQUATION = new EnergyEquation("ten Haaf", (user)=>{
-    const TDEE = 0;
-    return TDEE;
+const TINSLEY_RMR_EQUATION_BW = new EnergyEquation("Tinsley", (user) => {
+    const RMR = ((24.8 * user.weightKG ) + 10);
+    return RMR;
 });
 
 /**
- * 
+ * Calculates RMR using equation from ten Haaf and Weijs to predict RMR (given FFM).
+ *      RMR = 0.239(95.272 * FFM + 2026.161)
  */
-const MIFFLIN_TDEE_EQUATION = new EnergyEquation("Mifflin-St. Joer", (user)=>{
-    const TDEE = 0;
-    return TDEE;
+const TEN_HAAF_RMR_EQUATION_FFM = new EnergyEquation("ten Haaf", (user) => {
+    const RMR = (0.24 * ((95.27 * user.bodyFat.getFFM()) + 2026.16));
+    return RMR;
 });
 
 /**
- * 
+ * Calculates RMR using equation from ten Haaf and Weijs to predict RMR (NOT given FFM).
+ *      sex(M = 1,F = 0)
+ *      RMR = 0.239(49.94 * BW + 24.59 * H - 34.014 * age + 799.257 * sex + 122.502)
  */
-const CUNNINGHAM_TDEE_EQUATION = new EnergyEquation("Cunnigham", (user)=>{
-    const TDEE = 0;
-    return TDEE;
+const TEN_HAAF_RMR_EQUATION_BW = new EnergyEquation("ten Haaf", (user) => {
+    let sex = 0;
+    if(user.isMale == true){
+        sex = 1;
+    }
+    const RMR = (0.24 * (((49.94 * user.weightKG) + (24.59 * user.heightCM) - (34.01 * user.ageYears) + (799.26 * sex)) + 122.5));
+    return RMR;
 });
 
 /**
- * 
+ * Calculates RMR using equation from Mifflin et al. to predict RMR (given FFM).
+ *      RMR = 19.7 * FFM + 413
  */
-const OWEN_TDEE_EQUATION = new EnergyEquation("Owen", (user)=>{
-    const TDEE = 0;
-    return TDEE;
+const MIFFLIN_RMR_EQUATION_FFM = new EnergyEquation("Mifflin-St. Joer", (user) => {
+    const RMR = ((19.7 * user.bodyFat.getFFM() ) + 413);
+    return RMR;
 });
 
 /**
- * 
+ * Calculates RMR using equation from Mifflin et al. to predict RMR (NOT given FFM).
+ *      sex(M = 1,F = 0)
+ *      RMR = 9.99 * BW + 6.25 * H - 4.92 * age + 166 * sex - 161
  */
-const MULLER_TDEE_EQUATION = new EnergyEquation("Müller", (user)=>{
-    const TDEE = 0;
-    return TDEE;
+const MIFFLIN_RMR_EQUATION_BW = new EnergyEquation("Mifflin-St. Joer", (user) => {
+    let sex = 0;
+    if(user.isMale == true){
+        sex = 1;
+    }
+    const RMR = ((9.99 * user.weightKG) + (6.25 * user.heightCM) - (4.92 * user.ageYears) + (166 * sex) - 161);
+    return RMR;
 });
 
 /**
- * 
+ * Calculates RMR using equation from Cunningham to predict RMR.
+ *      RMR = 21.6 * FFM + 370 
  */
-const DE_LORENZO_TDEE_EQUATION = new EnergyEquation("De Lorenzo", (user)=>{
-    const TDEE = 0;
-    return TDEE;
+const CUNNINGHAM_RMR_EQUATION = new EnergyEquation("Cunnigham", (user) => {
+    const RMR = ((21.6 * user.bodyFat.getFFM()) + 370 );
+    return RMR;
+});
+
+/**
+ * Calculates RMR using equation from Owen et al to predict RMR (given FFM).
+ *      Male~RMR   = 22.3 * FFM + 290
+ *      Female~RMR = 19.7 * FFM + 334
+ */
+const OWEN_RMR_EQUATION_FFM = new EnergyEquation("Owen", (user) => {
+    let RMR = 0;
+    const userIsMale = (user.isMale == true);
+    const userIsFemale = (user.isMale == false);
+    if( userIsMale){
+        RMR = ((22.3 * user.bodyFat.getFFM()) + 290);
+    }
+    else if(userIsFemale){
+        RMR = ((19.7 * user.bodyFat.getFFM()) + 334);
+    }
+    return RMR;
+});
+
+/**
+ * Calculates RMR using equation from Owen et al to predict RMR (NOT given FFM).
+ *      Male~RMR           = 879 + 10.2 * BW
+ *      Female~RMR         = 795 + 7.18 * BW
+ *      Female Athlete~RMR = 50.4 + 21.1m
+ */
+const OWEN_RMR_EQUATION_BW = new EnergyEquation("Owen", (user) => {
+    let RMR = 0;
+    const userIsMale = (user.isMale == true);
+    const userIsFemale = (user.isMale == false);
+    const userIsAthlete = (user.athleteType != null);
+    if( userIsMale){
+        RMR = (879 + (10.2 * user.weightKG));
+    }
+    else if(userIsFemale){
+        if(userIsAthlete){
+            RMR = (50.4 + (21.1 * user.weightKG));
+        }
+        else{
+            RMR = (795 + (7.18 * user.weightKG));
+        }
+    }
+    return RMR;
+});
+
+/**
+ * Calculates RMR using equation from Müller et al. to predict RMR (given FFM).
+ *      sex(M = 1,F = 0)
+ *      RMR = 0.239(0.05192(FFM) + 0.04036(FM) + 0.869 * sex - 0.01181 * age + 2.992)
+ */
+const MULLER_RMR_EQUATION_FFM = new EnergyEquation("Müller", (user) => {
+    let sex = 0;
+    if(user.isMale == true){
+        sex = 1;
+    }
+    const RMR = (0.24 * ((0.05 * user.bodyFat.getFFM()) + (0.04 * user.bodyFat.getFM()) + (0.87 * sex) - (0.01 * user.ageYears) + 2.99));
+    return RMR;
+});
+
+/**
+ * Calculates RMR using equation from Müller et al. to predict RMR (NOT given FFM).
+ *      sex(M = 1,F = 0)
+ *      RMR = 0.239(0.047 * BW  + 1.009 * sex - 0.01452 * age + 3.21)
+ */
+const MULLER_RMR_EQUATION_BW = new EnergyEquation("Müller", (user) => {
+    let sex = 0;
+    if(user.isMale == true){
+        sex = 1;
+    }
+    const RMR = (0.24 * ((0.05 * user.weightKG) + (1 * sex) - (0.01 * user.ageYears) + 3.21));
+    return RMR;
+});
+
+/**
+ * Calculates RMR using equation from De Lorenzo et al to predict RMR.
+ *      RMR = 9 * BW + 11.7 * H - 857
+ */
+const DE_LORENZO_RMR_EQUATION = new EnergyEquation("De Lorenzo", (user) => {
+    const RMR = ((9 * user.weightKG) + (11.7 * user.heightCM) - 857);
+    return RMR;
 });
 
 /**
@@ -150,22 +288,22 @@ ATHLETE_TYPE_PHYSIQUE = "physique";
 ATHLETE_TYPE_SPORT = "sport";
 
 /**
- * Constant used for FFM measurement technique type of skinfold
+ * Constant used for FFM measurement technique type of skinfold.
  */
 FFM_TECHNIQUE_SKINFOLD = "skinfold";
 
 /**
- * Constant used for FFM measurement technique type of DXA
+ * Constant used for FFM measurement technique type of DXA.
  */
 FFM_TECHNIQUE_DXA = "dxa";
 
 /**
- * Constant used for FFM measurement technique type of UWW
+ * Constant used for FFM measurement technique type of UWW.
  */
 FFM_TECHNIQUE_UWW = "uww";
 
 /**
- * Constant used for FFM measurement technique type of BIA
+ * Constant used for FFM measurement technique type of BIA.
  */
 FFM_TECHNIQUE_BIA = "bia";
 
@@ -174,7 +312,7 @@ FFM_TECHNIQUE_BIA = "bia";
  */
 function getOptimalEquationForTDEE(user){
     let optimalEq;
-    const userKnowsFFM = (user.fatFreeMass != null);
+    const userKnowsFFM = (user.bodyFat != null);
     const userIsAthlete = (user.athleteType != null);
     const isSportAthlete = (user.athleteType == ATHLETE_TYPE_SPORT);
     const isPhysiqueAthlete = (user.athleteType == ATHLETE_TYPE_PHYSIQUE);
@@ -183,51 +321,51 @@ function getOptimalEquationForTDEE(user){
     if(userKnowsFFM){
         if(userIsAthlete){
             if(isPhysiqueAthlete){
-                optimalEq = TINSLEY_TDEE_EQUATION;
+                optimalEq = TINSLEY_RMR_EQUATION_FFM;
             }
             else if( isSportAthlete){
-                optimalEq = TEN_HAAF_TDEE_EQUATION;
+                optimalEq = TEN_HAAF_RMR_EQUATION_FFM;
             }
         }
         else{
-            const determinedBySkinfold = (user.fatFreeMass.technique == FFM_TECHNIQUE_SKINFOLD);
-            const determinedByDXA = (user.fatFreeMass.technique == FFM_TECHNIQUE_DXA);
-            const determinedByUWW = (user.fatFreeMass.technique == FFM_TECHNIQUE_UWW);
-            const determinedByBIA = (user.fatFreeMass.technique == FFM_TECHNIQUE_BIA);
+            const determinedBySkinfold = (user.bodyFat.technique == FFM_TECHNIQUE_SKINFOLD);
+            const determinedByDXA = (user.bodyFat.technique == FFM_TECHNIQUE_DXA);
+            const determinedByUWW = (user.bodyFat.technique == FFM_TECHNIQUE_UWW);
+            const determinedByBIA = (user.bodyFat.technique == FFM_TECHNIQUE_BIA);
             if(determinedBySkinfold){
-                optimalEq = MIFFLIN_TDEE_EQUATION;
+                optimalEq = MIFFLIN_RMR_EQUATION_FFM;
             }
             else if(determinedByDXA){
-                optimalEq = CUNNINGHAM_TDEE_EQUATION;
+                optimalEq = CUNNINGHAM_RMR_EQUATION;
             }
             else if(determinedByUWW){
-                optimalEq = OWEN_TDEE_EQUATION;
+                optimalEq = OWEN_RMR_EQUATION_FFM;
             }
             else if( determinedByBIA){
-                optimalEq = MULLER_TDEE_EQUATION;
+                optimalEq = MULLER_RMR_EQUATION_FFM;
             }
         }
     }
     else{
         if(userIsAthlete){
             if(isPhysiqueAthlete){
-                optimalEq = TINSLEY_TDEE_EQUATION;
+                optimalEq = TINSLEY_RMR_EQUATION_BW;
             }
             else if( isSportAthlete){
                 if(userIsMale){
-                    optimalEq = DE_LORENZO_TDEE_EQUATION;
+                    optimalEq = DE_LORENZO_RMR_EQUATION;
                 }
                 else if(userIsFemale){
-                    optimalEq = TEN_HAAF_TDEE_EQUATION;
+                    optimalEq = TEN_HAAF_RMR_EQUATION_BW;
                 }
             }
         }
         else{
             if(userIsMale){
-                optimalEq = MIFFLIN_TDEE_EQUATION;
+                optimalEq = MIFFLIN_RMR_EQUATION_BW;
             }
             else if(userIsFemale){
-                optimalEq = OWEN_TDEE_EQUATION;
+                optimalEq = OWEN_RMR_EQUATION_BW;
             }
         }
     }
