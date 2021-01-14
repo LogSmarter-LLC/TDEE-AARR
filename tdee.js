@@ -280,32 +280,78 @@ const DE_LORENZO_RMR_EQUATION = new EnergyEquation("De Lorenzo", (user) => {
 /**
  * Constant used for athlete type when the user is a physique athlete.
  */
-ATHLETE_TYPE_PHYSIQUE = "physique";
+const ATHLETE_TYPE_PHYSIQUE = "Physique";
 
 /**
  * Constant used for athlete type when the user is a sport athlete.
  */
-ATHLETE_TYPE_SPORT = "sport";
+const ATHLETE_TYPE_SPORT = "Sport";
 
 /**
  * Constant used for FFM measurement technique type of skinfold.
  */
-FFM_TECHNIQUE_SKINFOLD = "skinfold";
+const FFM_TECHNIQUE_SKINFOLD = "Skinfold";
 
 /**
  * Constant used for FFM measurement technique type of DXA.
  */
-FFM_TECHNIQUE_DXA = "dxa";
+const FFM_TECHNIQUE_DXA = "DXA";
 
 /**
  * Constant used for FFM measurement technique type of UWW.
  */
-FFM_TECHNIQUE_UWW = "uww";
+const FFM_TECHNIQUE_UWW = "UWW";
 
 /**
  * Constant used for FFM measurement technique type of BIA.
  */
-FFM_TECHNIQUE_BIA = "bia";
+const FFM_TECHNIQUE_BIA = "BIA";
+
+/**
+ * Constant used for setting the pages number system to imperial.
+ */
+const NUM_SYSTEM_IMPERIAL = "Imperial";
+
+/**
+ * Constant used for setting the pages number system to metric.
+ */
+const NUM_SYSTEM_METRIC = "Metric";
+
+/**
+ * Constant used for a user gender of male in the page's form.
+ */
+const GENDER_MALE = "Male";
+
+/**
+ * Constant used for a user gender of male in the page's form.
+ */
+const GENDER_FEMALE = "Female";
+
+/**
+ * Key used to refer to user activity level when sedentary.
+ */
+const ACTIVITY_LEVEL_SEDENTARY = "Sedentary";
+
+/**
+* Key used to refer to user activity level when lightly active.
+*/
+const ACTIVITY_LEVEL_LIGHTLY_ACTIVE = "Lightly Active";
+
+/**
+* Key used to refer to user activity level when  active.
+*/
+const ACTIVITY_LEVEL_ACTIVE = "Active";
+
+/**
+* Key used to refer to user activity level when very active.
+*/
+const ACTIVITY_LEVEL_VERY_ACTIVE = "Very Active";
+
+/**
+* This variable holds the value of the current number system that 
+* is displayed by the form. By default the number system is imperial.
+*/
+let currentNumberSystem;
 
 /**
  * Given a user object, returns the optimal equation to estimate TDEE for that user.
@@ -372,5 +418,97 @@ function getOptimalEquationForTDEE(user){
     return optimalEq;
 }
 
-console.log("Hello World");
+/**
+ * Given the id of a select, adds an option with the value of 
+ * each string in the optionValues array. If the startWithNoValue
+ * variable is true, then an empty option is added to the form control 
+ * and set as the currently selected option. The function clears any 
+ * existing options before adding new options to the select.
+ * 
+ * @param elementId        Id of the select.
+ * @param optionValues     Array of strings of option values to add to the select.
+ * @param startWithNoValue True if an empty option should be the default value for the control
+ */
+function setSelectById(elementId,optionValues, startWithNoValue){
+    const select = document.getElementById(elementId);
+    const lengthOfCurrentOptions = select.options.length;
+    if(lengthOfCurrentOptions > 0){
+        for( let optionIdx = (select.options.length-1); optionIdx > -1; optionIdx--){
+            select.options[optionIdx] = null;
+        }
+    }
+    const emptyOption = document.createElement("option");
+    emptyOption.disabled = true;
+    emptyOption.text = "";
+    emptyOption.selected = startWithNoValue;
+    select.add(emptyOption);
+    optionValues.forEach( optionValue => {
+        const optionElement = document.createElement("option");
+        optionElement.text = optionValue;
+        select.add(optionElement);
+    });
+}
 
+/**
+ * Handles setting the initial state of all forms on the page and resetting the 
+ * form. If the form has not been set yet, the the current number system is null.
+ * If the current number system is null, then the page defaults to the imperial 
+ * number system. Any futher calls to this function will result in all form fields
+ * being cleared except for the number system field. This is in case anyone is repeatedly
+ * calculating TDEE using this form, if so then it would be a bad user experience to
+ * repeatedly change the number system.
+ */
+function resetForm(){
+    const numberSystemNotSet = (currentNumberSystem == null)
+    if(numberSystemNotSet){
+        setSelectById("numberSystem", [NUM_SYSTEM_IMPERIAL,NUM_SYSTEM_METRIC]);
+        numberSystemChange();
+        document.getElementById("reset").addEventListener("click",resetForm);
+    }
+    setSelectById("gender", [GENDER_MALE,GENDER_FEMALE], true);
+    setSelectById("athleteType", [ATHLETE_TYPE_PHYSIQUE,ATHLETE_TYPE_SPORT],true);
+    setSelectById("bodyFatPercentageTechnique",[FFM_TECHNIQUE_SKINFOLD,FFM_TECHNIQUE_DXA,FFM_TECHNIQUE_UWW,FFM_TECHNIQUE_BIA],true);
+    setSelectById("activityLevel",[ACTIVITY_LEVEL_SEDENTARY,ACTIVITY_LEVEL_LIGHTLY_ACTIVE,ACTIVITY_LEVEL_ACTIVE,ACTIVITY_LEVEL_VERY_ACTIVE],true);
+}
+
+/**
+ * Listens to selection changes from the number system div in case the 
+ * UI needs to be updated to hide/show form controls based on the current 
+ * number system.
+ */
+function numberSystemChange(){
+    const userSelectedNumberSystem = document.getElementById("numberSystem").value;
+    const numberSystemIsNullOrDifferent = (currentNumberSystem != userSelectedNumberSystem || currentNumberSystem == null);
+    if(numberSystemIsNullOrDifferent){
+        currentNumberSystem = userSelectedNumberSystem;
+        const classOfElementsToShow = currentNumberSystem.toLowerCase();
+        let classOfElementsToHide;
+        if(currentNumberSystem == NUM_SYSTEM_IMPERIAL){
+            classOfElementsToHide = NUM_SYSTEM_METRIC.toLowerCase();
+        }
+        else if(currentNumberSystem == NUM_SYSTEM_METRIC ){
+            classOfElementsToHide = NUM_SYSTEM_IMPERIAL.toLowerCase();
+        }
+        const elementsToHide = document.getElementsByClassName(classOfElementsToHide);
+        const elementsToShow = document.getElementsByClassName(classOfElementsToShow);
+        if(elementsToHide && elementsToHide.length > 0){
+            Array.prototype.forEach.call(elementsToHide,element=>element.style.display="none");
+        }
+        if(elementsToShow && elementsToShow.length > 0){
+            Array.prototype.forEach.call(elementsToShow,element=>element.style.display="initial");
+        }
+    }
+}
+
+/**
+ * TDEE calculator form submission handler
+ */
+function handleSubmission(){
+    console.log("yeah you submitted")
+    return PREVENT_PAGE_RELOAD;
+}
+
+/**
+ * Waits for DOM to load before calling any setup functions.
+ */
+document.addEventListener("DOMContentLoaded", resetForm);
