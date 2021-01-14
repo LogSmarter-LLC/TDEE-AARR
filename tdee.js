@@ -54,14 +54,14 @@ class User{
      * Constructor assumes all parameters are valid and does no
      * checking for object types or errors.
      * 
-     * @param heightCM   the user's height in cm 
-     * @param weightKG   the user's weight in kg
+     * @param heightCM       the user's height in cm 
+     * @param weightKG       the user's weight in kg
      * @param isMale         true if the user is male, false if they are female
      * @param activityLevel  a constant used to represent the user's activity level
      * @param ageYears       the user's age in years
      * @param athleteType    null if the user is not an athlete. otherwise a string that 
      *                                  represents what type of athlete the user is.
-     * @param bodyFat    the user's FFM/LBM. Null if the measurement is unkown. 
+     * @param bodyFat        the user's FFM/LBM. Null if the measurement is unknown. 
      */
     constructor(heightCM, weightKG, isMale, activityLevel, ageYears, athleteType, bodyFat ){
         this.heightCM = heightCM;
@@ -83,7 +83,7 @@ class User{
 }
 
 /**
- * Class used to represent the different equations that are used to estimateRMR.
+ * Class used to represent the different equations that are used to estimate RMR.
  */
 class EnergyEquation{
  
@@ -91,7 +91,7 @@ class EnergyEquation{
      * Constructor assumes all parameters are valid and does no
      * checking for object types or errors.
      * 
-     * @param name name of the RMR estimation model/equation
+     * @param name     name of the RMR estimation model/equation
      * @param estimate a function that accepts a user object and 
      *                      estimates their TDEE as a number
      */
