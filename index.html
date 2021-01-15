@@ -1,116 +1,124 @@
 <html>
-    <header>
-        <title>TDEE AARR</title>
-        <link rel="stylesheet" href="style.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </header>
-    <body>
-        <script src="tdee.js"></script>
+<header>
+    <title>TDEE AARR</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</header>
+
+<body>
+    <script src="tdee.js"></script>
+    <div class="fillHeight">
         <div class="contentContainer">
             <h1 class="lsBorderColor">
                 Evidence Based TDEE Calculator
             </h1>
             <div class="form" onsubmit="return handleSubmission();">
                 <form class="fxLayoutCol">
-                <!---------------------------- Number System and Gender --------------------------->
-                    <div class= "formRow">
+                    <!---------------------------- Number System and Gender --------------------------->
+                    <div class="formRow">
                         <div class="formField">
                             <div class="formFieldHeader lsThemeText">
                                 Number System
-                            </div>  
+                            </div>
                             <div class="formFieldInput">
                                 <select id="numberSystem" onchange="numberSystemChange()"></select>
                             </div>
-                         </div>
-                         <div class ="formField">
+                        </div>
+                        <div class="formField">
                             <div class="formFieldHeader lsThemeText">
                                 Gender
-                            </div>  
+                            </div>
                             <div class="formFieldInput">
                                 <select id="gender">
                                 </select>
                             </div>
                         </div>
                     </div>
-                <!---------------------------- Height and Weight ---------------------------------->  
+                    <!---------------------------- Height and Weight ---------------------------------->
                     <div class="formRow">
                         <div class="formField">
                             <div class="formFieldHeader lsThemeText">
                                 Height <span class="imperial">(Ft'In")</span><span class="metric">(cm)</span>
-                            </div>  
+                            </div>
                             <div class="formFieldInput heightControls">
                                 <div class="imperialHeight imperial">
-                                    Feet <input type="number" id="heightFeet" step="1">
+                                    Feet <input type="number" id="heightFeet" step="1" min="1" max="11">
                                 </div>
                                 <div class="imperialHeight imperial">
-                                    Inches <input type="number" id="heightInches" step="1">
+                                    Inches <input type="number" id="heightInches" step="1" min="1" max="11">
                                 </div>
                                 <div class="metricHeight metric">
-                                    <input type="number" id="heightCM" step="1">
+                                    <input type="number" id="heightCM" step="1" min="1" max="999">
                                 </div>
                             </div>
                         </div>
-                        <div class ="formField">
+                        <div class="formField">
                             <div class="formFieldHeader lsThemeText">
                                 Weight <span class="imperial">(lbs)</span><span class="metric">(kg)</span>
-                            </div>  
-                            <div class="formFieldInput">
-                                <input type="number" id="weightPounds" class="imperial" step="0.1">
-                                <input type="number" id="weightKG" class="metric" step="0.1">
                             </div>
-                        </div> 
-                    </div>      
-                <!---------------------------- Age and Activity Level ---------------------------->  
+                            <div class="formFieldInput">
+                                <input type="number" id="weightPounds" class="imperial" step="0.1" min="1" max="999">
+                                <input type="number" id="weightKG" class="metric" step="0.1" min="1" max="999">
+                            </div>
+                        </div>
+                    </div>
+                    <!---------------------------- Age and Activity Level ---------------------------->
                     <div class="formRow">
                         <div class="formField">
                             <div class="formFieldHeader lsThemeText">
                                 Age
-                            </div>  
+                            </div>
                             <div class="formFieldInput">
-                                <input type="number" id="age" step="1">
+                                <input type="number" id="age" step="1" min="1" max="999">
                             </div>
                         </div>
-                        <div class ="formField">
+                        <div class="formField">
                             <div class="formFieldHeader lsThemeText">
                                 Activity Level
-                            </div>  
+                            </div>
                             <div class="formFieldInput">
                                 <select id="activityLevel">
                                 </select>
                             </div>
-                        </div> 
-                    </div>   
-                <!---------------------------- BF% and Athlete Type ---------------------------->  
+                        </div>
+                    </div>
+                    <!---------------------------- BF% and Athlete Type ---------------------------->
                     <div class="formRow">
                         <div class="formField">
                             <div class="formFieldHeader lsThemeText">
                                 Body Fat %
-                            </div>  
+                            </div>
                             <div class="formFieldInput bodyFatControls">
                                 <div class="imperialHeight bodyFatControl">
-                                    BF% <input type="number" id="bodyFatPercentage" step="0.1">
+                                    BF% <input type="number" id="bodyFatPercentage" step="0.1" min="1" max="100">
                                 </div>
                                 <div class="imperialHeight bodyFatControl">
                                     Technique <select id="bodyFatPercentageTechnique"></select>
                                 </div>
                             </div>
                         </div>
-                        <div class ="formField">
+                        <div class="formField">
                             <div class="formFieldHeader lsThemeText">
                                 Athlete Type
-                            </div>  
+                            </div>
                             <div class="formFieldInput">
                                 <select id="athleteType">
                                 </select>
                             </div>
-                        </div> 
-                    </div> 
+                        </div>
+                    </div>
                     <div class="buttonGroup">
-                        <button  type="submit">Calculate TDEE</button>
-                        <button  type="button" id="reset">Reset Form</button>
-                    </div> 
+                        <div class="errorMessageContainer">
+                            <div id="errorMessage">
+                            </div>
+                        </div>
+                        <button type="submit">Calculate TDEE</button>
+                        <button type="button" id="reset">Reset Form</button>
+                    </div>
                 </form>
             </div>
         </div>
-    </body>
+    </div>
+</body>
+
 </html>

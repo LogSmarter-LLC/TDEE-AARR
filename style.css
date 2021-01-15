@@ -8,6 +8,13 @@ html {
     padding: 5px
 }
 
+.fillHeight{
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content:center;
+}
+
 :root {
     --ls-theme-color: #43dbbd;
     --ls-theme-color-darker: #3B896D;
@@ -16,7 +23,6 @@ html {
 
 .contentContainer {
     max-width: 1000px;
-    margin-top: 20px;
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -165,4 +171,16 @@ input {
 
 .buttonGroup button {
     width: 100%;
+}
+
+.errorMessageContainer{
+    display: flex;
+    display:block;
+    align-items: center;
+    height:50px;
+}
+
+#errorMessage{
+    color:red;
+    text-align: center;
 }
