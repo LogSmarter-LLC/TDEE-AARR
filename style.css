@@ -8,11 +8,11 @@ html {
     padding: 5px
 }
 
-.fillHeight{
+.fillHeight {
     min-height: 100vh;
     display: flex;
     align-items: center;
-    justify-content:center;
+    justify-content: center;
 }
 
 :root {
@@ -29,6 +29,7 @@ html {
     background-color: white;
     padding: 8px;
     border-radius: 8px;
+    width: 100%;
 }
 
 .contentContainer p,
@@ -173,14 +174,57 @@ input {
     width: 100%;
 }
 
-.errorMessageContainer{
+.errorMessageContainer {
     display: flex;
-    display:block;
+    display: block;
     align-items: center;
-    height:50px;
+    height: 50px;
 }
 
-#errorMessage{
-    color:red;
+#errorMessage {
+    color: red;
     text-align: center;
+}
+
+.results {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+}
+
+.resultsFieldHeader {
+    font-size: x-large;
+    margin-bottom: 5px;
+}
+
+.resultsFieldContent {
+    width: 95%;
+    display: block;
+    margin: auto;
+}
+
+.resultsContainer {
+    flex-basis: 45%;
+    min-width: 300px;
+    margin-bottom: 20px;
+    flex-grow: 1;
+    margin: 10px;
+}
+
+.optimalEq {
+    background-color: yellow;
+}
+
+.equationResult {
+    text-align: center;
+}
+
+.flex-reverse {
+    flex-wrap: wrap-reverse;
+}
+
+#chartContainer {
+    display: flex;
+    align-items: center;
 }

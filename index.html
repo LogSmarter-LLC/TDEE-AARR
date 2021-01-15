@@ -4,11 +4,11 @@
     <link rel="stylesheet" href="style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </header>
-
 <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
     <script src="tdee.js"></script>
     <div class="fillHeight">
-        <div class="contentContainer">
+        <div class="contentContainer" id="tdeeForm">
             <h1 class="lsBorderColor">
                 Evidence Based TDEE Calculator
             </h1>
@@ -116,6 +116,33 @@
                         <button type="button" id="reset">Reset Form</button>
                     </div>
                 </form>
+            </div>
+        </div>
+        <div class="contentContainer" id="formResults">
+            <h1 class="lsBorderColor">
+                Evidence Based TDEE Calculator
+            </h1>
+            <div class="results flex-reverse">
+                <div class="resultsContainer">
+                    <div class="resultsFieldHeader lsThemeText">Optimal Equation</div>
+                    <div class="resultsFieldContent" id="optimal"></div>  
+                </div>
+                <div class="resultsContainer">
+                    <div class="resultsFieldHeader lsThemeText">Demographic</div>
+                    <div class="resultsFieldContent" id="demographicInfo"></div>
+                </div>
+            </div>
+            <div class="results">
+                <div class="resultsContainer" id="listOfTDEE"> 
+                </div>
+                <div class="resultsContainer" id="chartContainer">
+                    <canvas id="tdeeChart" width="300" height="200"></canvas>
+                </div>
+            </div>
+            <div class="buttonGroup">
+                <div class="errorMessageContainer">
+                </div>
+                <button type="button" id="backToForm">Back To Form</button>
             </div>
         </div>
     </div>
