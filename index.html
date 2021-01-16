@@ -60,10 +60,10 @@
                             </div>
                             <div class="formFieldInput heightControls">
                                 <div class="imperialHeight imperial">
-                                    Feet <input type="number" id="heightFeet" step="1" min="1" max="11">
+                                    <div>Feet</div> <input type="number" id="heightFeet" step="1" min="1" max="11">
                                 </div>
                                 <div class="imperialHeight imperial">
-                                    Inches <input type="number" id="heightInches" step="1" min="1" max="11">
+                                    <div>Inches</div> <input type="number" id="heightInches" step="1" min="1" max="11">
                                 </div>
                                 <div class="metricHeight metric">
                                     <input type="number" id="heightCM" step="1" min="1" max="999">
@@ -108,10 +108,11 @@
                             </div>
                             <div class="formFieldInput bodyFatControls">
                                 <div class="imperialHeight bodyFatControl">
-                                    BF% <input type="number" id="bodyFatPercentage" step="0.1" min="1" max="100">
+                                    <div>BF% </div> <input type="number" id="bodyFatPercentage" step="0.1" min="1"
+                                        max="100">
                                 </div>
                                 <div class="imperialHeight bodyFatControl">
-                                    Technique <select id="bodyFatPercentageTechnique"></select>
+                                    <div>Technique</div> <select id="bodyFatPercentageTechnique"></select>
                                 </div>
                             </div>
                         </div>
@@ -160,7 +161,7 @@
                 <div class="resultsContainer" id="listOfTDEE">
                 </div>
                 <div class="resultsContainer" id="chartContainer">
-                    <canvas id="tdeeChart"></canvas>
+                    <canvas id="tdeeChart" width="300" height="200"></canvas>
                 </div>
             </div>
             <div class="goToLS">
