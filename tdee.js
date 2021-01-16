@@ -149,7 +149,7 @@ const PREVENT_PAGE_RELOAD = false;
 const TINSLEY_RMR_EQUATION_FFM = new EnergyEquation("Tinsley", (user) => {
     const RMR = ((25.9 * user.bodyFat.getFFM()) + 284);
     return RMR;
-}, ["RMR = 25.9 * fatFreeMass + 284"] );
+}, ["RMR = 25.9 * fatFreeMass + 284"]);
 
 /**
  * Calculates RMR using equation from Tinsley et al. to predict RMR (NOT given FFM).
@@ -231,7 +231,7 @@ const OWEN_RMR_EQUATION_FFM = new EnergyEquation("Owen", (user) => {
         RMR = ((19.7 * user.bodyFat.getFFM()) + 334);
     }
     return RMR;
-}, ["Male RMR = 22.3 * fatFreeMass + 290" ,"Female RMR = 19.7 * fatFreeMass + 334 "]);
+}, ["Male RMR = 22.3 * fatFreeMass + 290", "Female RMR = 19.7 * fatFreeMass + 334 "]);
 
 /**
  * Calculates RMR using equation from Owen et al to predict RMR (NOT given FFM).
@@ -256,7 +256,7 @@ const OWEN_RMR_EQUATION_BW = new EnergyEquation("Owen", (user) => {
         }
     }
     return RMR;
-}, ["Male RMR = 879 + 10.2 * bodyWeight","Female RMR = 795 + 7.18 * bodyWeight","Female Athlete RMR = 50.4 + 21.1 * bodyWeight"]);
+}, ["Male RMR = 879 + 10.2 * bodyWeight", "Female RMR = 795 + 7.18 * bodyWeight", "Female Athlete RMR = 50.4 + 21.1 * bodyWeight"]);
 
 /**
  * Calculates RMR using equation from Müller et al. to predict RMR (given FFM).
@@ -339,10 +339,10 @@ const ALL_EQUATIONS = [
     DE_LORENZO_RMR_EQUATION
 ];
 
- /**
- * A list of the equations considered by the optimal equation algorithm 
- * if the user does not know their FFM.
- */
+/**
+* A list of the equations considered by the optimal equation algorithm 
+* if the user does not know their FFM.
+*/
 
 /**
  * Constant used for athlete type when the user is a physique athlete.
@@ -629,14 +629,14 @@ function convertLbsToKg(weight_lbs) {
     return roundNumberToOneDecimalPlace(weight_lbs * 0.454);
 }
 
- /**
- * Converts a weight in kg to the equivalent amount of weight in lbs and rounds to one decimal place.
- * 
- * @param weight_kg weight to be converted from kg to lbs.
- */
- function convertKgToLbs(weight_kg) {
+/**
+* Converts a weight in kg to the equivalent amount of weight in lbs and rounds to one decimal place.
+* 
+* @param weight_kg weight to be converted from kg to lbs.
+*/
+function convertKgToLbs(weight_kg) {
     return this.roundNumberToOneDecimalPlace(weight_kg / 0.454);
- }
+}
 
 /**
  * Converts a height represented in feet and inches to the equivalent height in only inches.
@@ -671,7 +671,7 @@ function convertInchesToCentimeters(height_inches) {
 * 
 * @param height_centimeters height to be converted from cm to IN.
 */
-function convertCentimetersToInches(height_centimeters){
+function convertCentimetersToInches(height_centimeters) {
     return this.roundNumberToOneDecimalPlace(height_centimeters / 2.54);
 }
 
@@ -682,15 +682,15 @@ function convertCentimetersToInches(height_centimeters){
  * 
  * @param heightInches  height in inches to be converted.
  */
-function convertInchesToString(heightInches){
+function convertInchesToString(heightInches) {
     const heightIsNullOrNegative = (heightInches == null || heightInches <= 0)
     if (heightIsNullOrNegative) {
-      return "";
+        return "";
     }
     else {
-      return Math.floor((heightInches / 12)) + "' " + Math.floor(heightInches % 12) + "\"";
+        return Math.floor((heightInches / 12)) + "' " + Math.floor(heightInches % 12) + "\"";
     }
-  }
+}
 
 /**
  * This function is returned from the submission handler if the user's TDEE
@@ -828,17 +828,17 @@ function handleSubmission() {
 /**
  * Hides the TDEE calculator form and displays the results UI
  */
-function showResults(){
-    document.getElementById("tdeeForm").style.display="none";
-    document.getElementById("formResults").style.display="block";
+function showResults() {
+    document.getElementById("tdeeForm").style.display = "none";
+    document.getElementById("formResults").style.display = "block";
 }
 
 /**
  * Hides the results UI and displays the TDEE calculator form.
  */
-function showForm(){
-    document.getElementById("formResults").style.display="none";
-    document.getElementById("tdeeForm").style.display="block";
+function showForm() {
+    document.getElementById("formResults").style.display = "none";
+    document.getElementById("tdeeForm").style.display = "block";
 }
 
 /**
@@ -853,8 +853,10 @@ function displayResults(user) {
     const optimalEquation = getOptimalEquationForTDEE(user);
     buildDemoStatement(user);
     buildOptimalStatement(optimalEquation);
-    buildListOfMultipleTDEE(user,optimalEquation);
+    buildListOfMultipleTDEE(user, optimalEquation);
     showResults();
+    location.href = "#";
+    location.href = "#formResults"
 }
 
 /**
@@ -863,18 +865,18 @@ function displayResults(user) {
  * can see the difference between their estimated TDEE and RMR from the different
  * equations.
  */
-function buildListOfMultipleTDEE(user,optimalEQ){
+function buildListOfMultipleTDEE(user, optimalEQ) {
     const tdeeDiv = document.getElementById("listOfTDEE");
     tdeeDiv.innerHTML = "";
     let equationsToConsider;
     const userKnowsFFM = (user.bodyFat != null);
-    if(userKnowsFFM){
+    if (userKnowsFFM) {
         equationsToConsider = FFM_EQUATION_LIST;
     }
-    else{
+    else {
         equationsToConsider = BW_EQUATION_LIST;
     }
-    const addEquationToList = (equation,isOptimalEq) => {
+    const addEquationToList = (equation, isOptimalEq) => {
         const optimalHeader = document.createElement("div")
         optimalHeader.innerHTML = equation.name;
         optimalHeader.classList.add("resultsFieldHeader")
@@ -882,27 +884,27 @@ function buildListOfMultipleTDEE(user,optimalEQ){
         const optimalContent = document.createElement("div");
         optimalContent.classList.add("resultsFieldContent");
         optimalContent.classList.add("equationResult");
-        if(isOptimalEq){
+        if (isOptimalEq) {
             optimalContent.classList.add("optimalEq");
         }
-        optimalContent.innerHTML = ("RMR: " + equation.getEstimateOfRMR(user) + "&nbsp;&nbsp;TDEE: " + equation.getEstimateOfTDEE(user)) +" kcal";
+        optimalContent.innerHTML = ("RMR: " + equation.getEstimateOfRMR(user) + "&nbsp;&nbsp;TDEE: " + equation.getEstimateOfTDEE(user)) + " kcal";
         tdeeDiv.append(optimalHeader);
         tdeeDiv.append(optimalContent);
     }
     addEquationToList(optimalEQ, true);
-    equationsToConsider.forEach(equation=>{
-        if(equation != optimalEQ){
-            addEquationToList(equation,false);
+    equationsToConsider.forEach(equation => {
+        if (equation != optimalEQ) {
+            addEquationToList(equation, false);
         }
     });
-    buildChart(user,equationsToConsider);
+    buildChart(user, equationsToConsider);
 }
 
 /**
  * Builds a statement that can be displayed in the UI that given the user's
  * optimal TDEE eequation.
  */
-function buildOptimalStatement(optimalEquation){
+function buildOptimalStatement(optimalEquation) {
     let statment = "Based on your demographic information, we recommend using the ";
     statment += optimalEquation.name;
     statment += " equation to estimate your TDEE.";
@@ -918,38 +920,38 @@ function buildOptimalStatement(optimalEquation){
  * the user that we are displaying intake suggestions for. Displays the
  * statement in the UI in the demographic information div.
  */
-function buildDemoStatement(user){
+function buildDemoStatement(user) {
     let demoStatement = user.ageYears + " year old ";
     if (user.isMale) {
-      demoStatement += "male ";
+        demoStatement += "male ";
     } else {
-      demoStatement += "female ";
+        demoStatement += "female ";
     }
     demoStatement += " that is ";
     if (currentNumberSystem == NUM_SYSTEM_IMPERIAL) {
-      let heightInInches = convertCentimetersToInches(user.heightCM);
-      demoStatement += convertInchesToString(heightInInches);
+        let heightInInches = convertCentimetersToInches(user.heightCM);
+        demoStatement += convertInchesToString(heightInInches);
     } else {
-      demoStatement += user.heightCM + " cm";
+        demoStatement += user.heightCM + " cm";
     }
     demoStatement += ", weighs "
     if (currentNumberSystem == NUM_SYSTEM_IMPERIAL) {
-      let weightInLbs = convertKgToLbs(user.weightKG);
-      demoStatement += weightInLbs + " lb";
+        let weightInLbs = convertKgToLbs(user.weightKG);
+        demoStatement += weightInLbs + " lb";
     } else {
-      demoStatement += user.weightKG + " kg";
+        demoStatement += user.weightKG + " kg";
     }
     demoStatement += ", and is " + user.activityLevel.toLowerCase() + ". ";
     const isAthlete = (user.athleteType != null);
-    if(isAthlete){
+    if (isAthlete) {
         demoStatement += "Is a " + user.athleteType.toLowerCase() + " athlete and"
-    }else{
+    } else {
         demoStatement += "Is not an athlete and"
     }
     const knowsFFM = (user.bodyFat != null);
-    if(knowsFFM){
+    if (knowsFFM) {
         demoStatement += " has a body fat percentage of " + (user.bodyFat.measurement * 100) + "%."
-    }else{
+    } else {
         demoStatement += " has an unknown body fat percentage.";
     }
     const demoDiv = document.getElementById("demographicInfo");
@@ -962,10 +964,10 @@ function buildDemoStatement(user){
  * For each equation being considered, both the calculated RMR and 
  * TDEE are displayed.
  */
-function buildChart( user, equationsToConsider){
+function buildChart(user, equationsToConsider) {
     const rmrDataset = {
         label: "RMR",
-        data: equationsToConsider.map(equation=>equation.getEstimateOfRMR(user)),
+        data: equationsToConsider.map(equation => equation.getEstimateOfRMR(user)),
         borderColor: "#1D2671",
         backgroundColor: "#1D2671",
         hoverBackgroundColor: "#1D2671",
@@ -973,19 +975,20 @@ function buildChart( user, equationsToConsider){
     };
     const tdeeDataset = {
         label: "TDEE",
-        data: equationsToConsider.map(equation=>equation.getEstimateOfTDEE(user)),
+        data: equationsToConsider.map(equation => equation.getEstimateOfTDEE(user)),
         borderColor: "#C33764",
         backgroundColor: "#C33764",
         hoverBackgroundColor: "#C33764",
         hoverBorderColor: "#C33764",
-        
+
     };
     const ctx = document.getElementById('tdeeChart');
-    new Chart(ctx, {type: 'bar',
-     data: {
-         labels: equationsToConsider.map(equation=>equation.name),
-         datasets: [ rmrDataset, tdeeDataset]
-         }
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: equationsToConsider.map(equation => equation.name),
+            datasets: [rmrDataset, tdeeDataset]
+        }
     });
 }
 
@@ -994,16 +997,16 @@ function buildChart( user, equationsToConsider){
  * under the how it works section, where a high level explanation of the 
  * project is given.
  */
-function buildEquationList(){
+function buildEquationList() {
     const equationListDiv = document.getElementById("equationList");
-    ALL_EQUATIONS.forEach( equation => {
+    ALL_EQUATIONS.forEach(equation => {
         const isfatFreeMassEquation = FFM_EQUATION_LIST.includes(equation);
         const isBodyWeightEquation = BW_EQUATION_LIST.includes(equation);
         let fullName = equation.name;
-        if(isfatFreeMassEquation){
+        if (isfatFreeMassEquation) {
             fullName += " fat free mass ";
         }
-        else if(isBodyWeightEquation){
+        else if (isBodyWeightEquation) {
             fullName += " body weight ";
         }
         const equationNameDiv = document.createElement("div");
@@ -1011,7 +1014,7 @@ function buildEquationList(){
         equationNameDiv.classList.add("equationName");
         equationNameDiv.classList.add("lsThemeText");
         equationListDiv.append(equationNameDiv);
-        equation.plainTextEquation.forEach( equationString => {
+        equation.plainTextEquation.forEach(equationString => {
             const equationDefinitionDiv = document.createElement("div");
             equationDefinitionDiv.classList.add("equationDefinition")
             const equationStringDiv = document.createElement("div");
@@ -1022,7 +1025,7 @@ function buildEquationList(){
         });
     });
 }
- 
+
 /**
  * Waits for DOM to load before calling any setup functions.
  */
