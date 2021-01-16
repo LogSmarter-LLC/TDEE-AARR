@@ -8,10 +8,21 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
     <script src="tdee.js"></script>
     <div class="fillHeight">
+        <div class="builtBy">
+            <img src="images/icon.png">
+            <div><a href="https://www.logsmarter.net" class="builtByLink">Developed By LogSmarter™ LLC.</a></div>
+        </div>
         <div class="contentContainer" id="tdeeForm">
             <h1 class="lsBorderColor">
-                Evidence Based TDEE Calculator
+                Ultimate TDEE Calculator
             </h1>
+            <div class="formMessage">
+                Total Daily Energy Expenditure (<a href="https://www.youtube.com/watch?v=6Dniijit0d4&feature=youtu.be">TDEE</a>) is the number of calories an individual burns per day to maintain their weight. Many equations exist for estimating TDEE, but
+                not all are the same. Certain equations work better for some populations and worse for others. 
+                <br><br>
+                This calculator uses your demographic information to determine which equation fits you the best and compares the results of estimating your TDEE to other equations. For a full list of equations that 
+                this calculator considers, check out the list below the form.
+            </div>
             <div class="form" onsubmit="return handleSubmission();">
                 <form class="fxLayoutCol">
                     <!---------------------------- Number System and Gender --------------------------->
@@ -115,12 +126,16 @@
                         <button type="submit">Calculate TDEE</button>
                         <button type="button" id="reset">Reset Form</button>
                     </div>
+                    <div class="dontKnow">
+                        If you dont know your body fat percentage, or your not an athlete, you can leave those fields blank. If you're not sure how to determine your activity level, check out this <a href="https://www.youtube.com/watch?v=Ll7o4BNC7zI&t=17s">video</a>.
+                        Feel free to send any other questions to <span class="lsThemeText">support@logsmarter.net</span>
+                    </div>
                 </form>
             </div>
         </div>
         <div class="contentContainer" id="formResults">
             <h1 class="lsBorderColor">
-                Evidence Based TDEE Calculator
+                Ultimate TDEE Calculator
             </h1>
             <div class="results flex-reverse">
                 <div class="resultsContainer">
@@ -139,10 +154,34 @@
                     <canvas id="tdeeChart" width="300" height="200"></canvas>
                 </div>
             </div>
+            <div class="goToLS">
+                <br><br>
+                This calculator is good, but our software is better. Utilizing daily records of your calorie intake and body weight, 
+                our proprietary machine learning algorithm can estimate your TDEE and gets more accurate the more you track. Unlike a 
+                predictive model, our algorithm is constantly learning and updating its estimate of your TDEE. If you're
+                interested in optimizing your nutrition, go to <a href="https://www.logsmarter.net">www.LogSmarter.net</a>
+            </div>
             <div class="buttonGroup">
-                <div class="errorMessageContainer">
-                </div>
                 <button type="button" id="backToForm">Back To Form</button>
+            </div>
+        </div>
+        <div class="contentContainer equationContainer">
+            <h1 class="lsBorderColor">
+                How Does It Work?
+            </h1>
+            <div class="formMessage">
+                This calculator uses a simple algorithm created by  our CSO <a href="https://www.linkedin.com/in/brob21/">Dr. Brandon Roberts.</a> to determine which
+                TDEE equation is likely to be optimal based on your demographic information. This web page was developed by LogSmarter CEO <a href="https://www.linkedin.com/in/ryan-lefebvre/">Ryan Lefebvre</a> using vanilla JS, HTML
+                and CSS. The project is open source and the repository can be found on our company's <a href="https://github.com/LogSmarter-LLC">github</a>.
+                <br><br>
+                Below is a list of all the equations this calculator considers. These equations do not directly estimate TDEE. They estimate resting metabolic rate (RMR) which 
+                is the number of calories your body requires at rest. To estimate TDEE, the result of the equation is multiplied by a value determined by the individual's activity level.
+                The more active an individual is, the higher the multiplier, resulting in a higher TDEE estimate.
+                <br><br>
+                All equations use the metric system. This means fat mass, fat free mass and body weight are measured in kg and height is measured in cm. To calculate TDEE from these equations,
+                multiply the result by one of the following values based on your activity level. (sedentary=0, lightly active=1.375, active=1.55, very active=1.725 )
+            </div>
+            <div id="equationList">
             </div>
         </div>
     </div>

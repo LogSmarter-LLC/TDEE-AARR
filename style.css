@@ -13,6 +13,7 @@ html {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
 }
 
 :root {
@@ -29,7 +30,6 @@ html {
     background-color: white;
     padding: 8px;
     border-radius: 8px;
-    width: 100%;
 }
 
 .contentContainer p,
@@ -160,14 +160,15 @@ input {
 }
 
 .buttonGroup {
-    width: 220px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    flex-wrap: nowrap;
     display: block;
     margin: auto;
     margin-top: 20px;
+    width: 220px;
 }
 
 .buttonGroup button {
@@ -227,4 +228,75 @@ input {
 #chartContainer {
     display: flex;
     align-items: center;
+}
+
+canvas {
+    width: 100% !important;
+    /* Chart refuses to shrink if !important is missing*/
+}
+
+.formMessage,
+.goToLS {
+    width: 95%;
+    margin: auto;
+}
+
+.builtBy {
+    margin-bottom: 20px;
+}
+
+.builtBy img {
+    width: 175px;
+    height: 175px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.builtByLink {
+    text-align: center;
+    color: white;
+    font-weight: bold;
+}
+
+.equationContainer {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.equationName {
+    font-size: large;
+    font-weight: bold;
+    width: 95%;
+    margin: auto;
+    margin-top: 10px;
+}
+
+.equationDefinition {
+    width: 80%;
+    margin: auto;
+    margin-top: 5px;
+    background-color: #c0c0c0;
+    border-color: #e9e8e8;
+    border-width: 2px;
+    border-style: solid;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.equationString {
+    width: 90%;
+    margin: auto;
+}
+
+.dontKnow {
+    width: 90%;
+    margin: auto;
+    margin-top: 20px;
 }

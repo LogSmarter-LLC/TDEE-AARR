@@ -106,13 +106,16 @@ class EnergyEquation {
      * Constructor assumes all parameters are valid and does no
      * checking for object types or errors.
      * 
-     * @param name     name of the RMR estimation model/equation
-     * @param estimate a function that accepts a user object and 
+     * @param name      name of the RMR estimation model/equation
+     * @param estimate  a function that accepts a user object and 
      *                      estimates their TDEE as a number
+     * @param plainTect an array of strings that can be displayed in the UI 
+     *                      explaining how the equation works.
      */
-    constructor(name, estimate) {
+    constructor(name, estimate, plainTextEquation) {
         this.name = name;
         this.estimate = estimate;
+        this.plainTextEquation = plainTextEquation;
     }
 
     /**
@@ -146,7 +149,7 @@ const PREVENT_PAGE_RELOAD = false;
 const TINSLEY_RMR_EQUATION_FFM = new EnergyEquation("Tinsley", (user) => {
     const RMR = ((25.9 * user.bodyFat.getFFM()) + 284);
     return RMR;
-});
+}, ["RMR = 25.9 * fatFreeMass + 284"] );
 
 /**
  * Calculates RMR using equation from Tinsley et al. to predict RMR (NOT given FFM).
@@ -155,7 +158,7 @@ const TINSLEY_RMR_EQUATION_FFM = new EnergyEquation("Tinsley", (user) => {
 const TINSLEY_RMR_EQUATION_BW = new EnergyEquation("Tinsley", (user) => {
     const RMR = ((24.8 * user.weightKG) + 10);
     return RMR;
-});
+}, ["RMR = 24.8 * bodyWeight + 10"]);
 
 /**
  * Calculates RMR using equation from ten Haaf and Weijs to predict RMR (given FFM).
@@ -164,7 +167,7 @@ const TINSLEY_RMR_EQUATION_BW = new EnergyEquation("Tinsley", (user) => {
 const TEN_HAAF_RMR_EQUATION_FFM = new EnergyEquation("ten Haaf", (user) => {
     const RMR = (0.24 * ((95.27 * user.bodyFat.getFFM()) + 2026.16));
     return RMR;
-});
+}, ["RMR = 0.239(95.272 * fatFreeMass + 2026.161)"]);
 
 /**
  * Calculates RMR using equation from ten Haaf and Weijs to predict RMR (NOT given FFM).
@@ -178,7 +181,7 @@ const TEN_HAAF_RMR_EQUATION_BW = new EnergyEquation("ten Haaf", (user) => {
     }
     const RMR = (0.24 * (((49.94 * user.weightKG) + (24.59 * user.heightCM) - (34.01 * user.ageYears) + (799.26 * sex)) + 122.5));
     return RMR;
-});
+}, ["RMR = 0.239(49.94 * bodyWeight + 24.59 * height - 34.014 * age + 799.257 * sex + 122.502)"]);
 
 /**
  * Calculates RMR using equation from Mifflin et al. to predict RMR (given FFM).
@@ -187,7 +190,7 @@ const TEN_HAAF_RMR_EQUATION_BW = new EnergyEquation("ten Haaf", (user) => {
 const MIFFLIN_RMR_EQUATION_FFM = new EnergyEquation("Mifflin-St. Joer", (user) => {
     const RMR = ((19.7 * user.bodyFat.getFFM()) + 413);
     return RMR;
-});
+}, ["RMR = 19.7 * fatFreeMass + 413"]);
 
 /**
  * Calculates RMR using equation from Mifflin et al. to predict RMR (NOT given FFM).
@@ -201,7 +204,7 @@ const MIFFLIN_RMR_EQUATION_BW = new EnergyEquation("Mifflin-St. Joer", (user) =>
     }
     const RMR = ((9.99 * user.weightKG) + (6.25 * user.heightCM) - (4.92 * user.ageYears) + (166 * sex) - 161);
     return RMR;
-});
+}, ["RMR = 9.99 * bodyWeight + 6.25 * height - 4.92 * age + 166 * sex - 161"]);
 
 /**
  * Calculates RMR using equation from Cunningham to predict RMR.
@@ -210,7 +213,7 @@ const MIFFLIN_RMR_EQUATION_BW = new EnergyEquation("Mifflin-St. Joer", (user) =>
 const CUNNINGHAM_RMR_EQUATION = new EnergyEquation("Cunnigham", (user) => {
     const RMR = ((21.6 * user.bodyFat.getFFM()) + 370);
     return RMR;
-});
+}, ["RMR = 21.6 * fatFreeMass + 370"]);
 
 /**
  * Calculates RMR using equation from Owen et al to predict RMR (given FFM).
@@ -228,13 +231,13 @@ const OWEN_RMR_EQUATION_FFM = new EnergyEquation("Owen", (user) => {
         RMR = ((19.7 * user.bodyFat.getFFM()) + 334);
     }
     return RMR;
-});
+}, ["Male RMR = 22.3 * fatFreeMass + 290" ,"Female RMR = 19.7 * fatFreeMass + 334 "]);
 
 /**
  * Calculates RMR using equation from Owen et al to predict RMR (NOT given FFM).
  *      Male~RMR           = 879 + 10.2 * BW
  *      Female~RMR         = 795 + 7.18 * BW
- *      Female Athlete~RMR = 50.4 + 21.1m
+ *      Female Athlete~RMR = 50.4 + 21.1 * BW
  */
 const OWEN_RMR_EQUATION_BW = new EnergyEquation("Owen", (user) => {
     let RMR = 0;
@@ -253,7 +256,7 @@ const OWEN_RMR_EQUATION_BW = new EnergyEquation("Owen", (user) => {
         }
     }
     return RMR;
-});
+}, ["Male RMR = 879 + 10.2 * bodyWeight","Female RMR = 795 + 7.18 * bodyWeight","Female Athlete RMR = 50.4 + 21.1 * bodyWeight"]);
 
 /**
  * Calculates RMR using equation from Müller et al. to predict RMR (given FFM).
@@ -267,12 +270,12 @@ const MULLER_RMR_EQUATION_FFM = new EnergyEquation("Muller", (user) => {
     }
     const RMR = (239 * ((0.05 * user.bodyFat.getFFM()) + (0.04 * user.bodyFat.getFM()) + (0.87 * sex) - (0.01 * user.ageYears) + 2.99));
     return RMR;
-});
+}, ["RMR = 239 * (0.05192(fatFreeMass) + 0.04036(fatMass) + 0.869 * sex - 0.01181 * age + 2.992)"]);
 
 /**
  * Calculates RMR using equation from Müller et al. to predict RMR (NOT given FFM).
  *      sex(M = 1,F = 0)
- *      RMR = 0.239(0.047 * BW  + 1.009 * sex - 0.01452 * age + 3.21)
+ *      RMR = 239 * (0.047 * BW  + 1.009 * sex - 0.01452 * age + 3.21)
  */
 const MULLER_RMR_EQUATION_BW = new EnergyEquation("Muller", (user) => {
     let sex = 0;
@@ -281,7 +284,7 @@ const MULLER_RMR_EQUATION_BW = new EnergyEquation("Muller", (user) => {
     }
     const RMR = (239 * ((0.05 * user.weightKG) + (1 * sex) - (0.01 * user.ageYears) + 3.21));
     return RMR;
-});
+}, ["RMR = 239 * (0.047 * bodyWeight  + 1.009 * sex - 0.01452 * age + 3.21) "]);
 
 /**
  * Calculates RMR using equation from De Lorenzo et al to predict RMR.
@@ -290,7 +293,7 @@ const MULLER_RMR_EQUATION_BW = new EnergyEquation("Muller", (user) => {
 const DE_LORENZO_RMR_EQUATION = new EnergyEquation("De Lorenzo", (user) => {
     const RMR = ((9 * user.weightKG) + (11.7 * user.heightCM) - 857);
     return RMR;
-});
+}, ["RMR = 9 * bodyWeight + 11.7 * height - 857"]);
 
 /**
  * A list of the equations considered by the optimal equation algorithm 
@@ -316,6 +319,24 @@ const BW_EQUATION_LIST = [
     MIFFLIN_RMR_EQUATION_BW,
     OWEN_RMR_EQUATION_BW,
     MULLER_RMR_EQUATION_BW
+];
+
+/**
+ * A complete list of all the equations.
+ */
+const ALL_EQUATIONS = [
+    TINSLEY_RMR_EQUATION_FFM,
+    TINSLEY_RMR_EQUATION_BW,
+    TEN_HAAF_RMR_EQUATION_FFM,
+    TEN_HAAF_RMR_EQUATION_BW,
+    MIFFLIN_RMR_EQUATION_FFM,
+    MIFFLIN_RMR_EQUATION_BW,
+    CUNNINGHAM_RMR_EQUATION,
+    OWEN_RMR_EQUATION_FFM,
+    OWEN_RMR_EQUATION_BW,
+    MULLER_RMR_EQUATION_FFM,
+    MULLER_RMR_EQUATION_BW,
+    DE_LORENZO_RMR_EQUATION
 ];
 
  /**
@@ -522,6 +543,7 @@ function resetForm() {
         numberSystemChange();
         document.getElementById("reset").addEventListener("click", resetForm);
         document.getElementById("backToForm").addEventListener("click", showForm);
+        buildEquationList();
     }
     setSelectById("gender", [GENDER_MALE, GENDER_FEMALE], true);
     setSelectById("athleteType", [ATHLETE_TYPE_PHYSIQUE, ATHLETE_TYPE_SPORT], true);
@@ -964,6 +986,40 @@ function buildChart( user, equationsToConsider){
          labels: equationsToConsider.map(equation=>equation.name),
          datasets: [ rmrDataset, tdeeDataset]
          }
+    });
+}
+
+/**
+ * Creates a div for each equation that the calculator considers in the UI
+ * under the how it works section, where a high level explanation of the 
+ * project is given.
+ */
+function buildEquationList(){
+    const equationListDiv = document.getElementById("equationList");
+    ALL_EQUATIONS.forEach( equation => {
+        const isfatFreeMassEquation = FFM_EQUATION_LIST.includes(equation);
+        const isBodyWeightEquation = BW_EQUATION_LIST.includes(equation);
+        let fullName = equation.name;
+        if(isfatFreeMassEquation){
+            fullName += " fat free mass ";
+        }
+        else if(isBodyWeightEquation){
+            fullName += " body weight ";
+        }
+        const equationNameDiv = document.createElement("div");
+        equationNameDiv.innerHTML = fullName;
+        equationNameDiv.classList.add("equationName");
+        equationNameDiv.classList.add("lsThemeText");
+        equationListDiv.append(equationNameDiv);
+        equation.plainTextEquation.forEach( equationString => {
+            const equationDefinitionDiv = document.createElement("div");
+            equationDefinitionDiv.classList.add("equationDefinition")
+            const equationStringDiv = document.createElement("div");
+            equationStringDiv.classList.add("equationString");
+            equationStringDiv.innerHTML = equationString;
+            equationDefinitionDiv.append(equationStringDiv);
+            equationListDiv.append(equationDefinitionDiv);
+        });
     });
 }
  
