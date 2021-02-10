@@ -937,7 +937,7 @@ function buildDemoStatement(user) {
     demoStatement += ", weighs "
     if (currentNumberSystem == NUM_SYSTEM_IMPERIAL) {
         let weightInLbs = convertKgToLbs(user.weightKG);
-        demoStatement += weightInLbs + " lb";
+        demoStatement += Math.round(weightInLbs) + " lb";
     } else {
         demoStatement += user.weightKG + " kg";
     }
